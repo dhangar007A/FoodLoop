@@ -1,0 +1,320 @@
+@import './theme.css';
+
+.user-profile-page {
+    min-height: 100dvh;
+    background: var(--color-bg);
+    padding: var(--space-4);
+    padding-bottom: 100px;
+}
+
+.profile-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100dvh;
+    color: var(--color-text-secondary);
+}
+
+.user-profile-header {
+    text-align: center;
+    padding: var(--space-6) 0;
+}
+
+.user-avatar-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: var(--space-4);
+}
+
+.user-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-avatar span {
+    color: white;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.avatar-upload {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-text);
+}
+
+.user-info h1 {
+    color: var(--color-text);
+    font-size: 1.5rem;
+    margin: 0 0 var(--space-1);
+}
+
+.user-email {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    margin: 0 0 var(--space-2);
+}
+
+.user-bio {
+    color: var(--color-text);
+    font-size: 14px;
+    margin: 0 0 var(--space-3);
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-edit {
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.btn-edit:hover {
+    background: var(--color-surface-alt);
+}
+
+.edit-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.edit-profile-form input,
+.edit-profile-form textarea {
+    padding: var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 14px;
+}
+
+.edit-profile-form textarea {
+    resize: none;
+    min-height: 80px;
+}
+
+.edit-actions {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.btn-save {
+    flex: 1;
+    padding: var(--space-2);
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+}
+
+.btn-cancel {
+    flex: 1;
+    padding: var(--space-2);
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+}
+
+.user-stats {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-6);
+    margin-top: var(--space-4);
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+.profile-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-4);
+}
+
+.profile-tabs button {
+    flex: 1;
+    padding: var(--space-3);
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all var(--transition-base);
+}
+
+.profile-tabs button.active {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+}
+
+.profile-content {
+    min-height: 200px;
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-2);
+}
+
+.video-thumbnail {
+    position: relative;
+    aspect-ratio: 9/16;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--color-surface-alt);
+}
+
+.video-thumbnail video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-2);
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    color: white;
+    font-size: 12px;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--color-text-secondary);
+    padding: var(--space-8);
+}
+
+.btn-view-saved {
+    display: inline-block;
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-accent);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    margin-top: var(--space-3);
+}
+
+.following-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.following-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+}
+
+.following-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+}
+
+.following-info h4 {
+    color: var(--color-text);
+    margin: 0;
+    font-size: 14px;
+}
+
+.following-info p {
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-size: 12px;
+}
+
+.btn-logout {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    margin: var(--space-6) auto;
+    padding: var(--space-3);
+    background: var(--color-danger);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Theme Section */
+.theme-section {
+    max-width: 300px;
+    margin: 0 auto var(--space-6);
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+}
+
+.theme-section h3 {
+    margin: 0 0 var(--space-3);
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}

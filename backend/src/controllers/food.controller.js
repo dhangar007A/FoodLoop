@@ -129,11 +129,94 @@ async function getSaveFood(req, res) {
 
 }
 
+// Increment view count when a video is viewed
+async function incrementViewCount(req, res) {
+    const { foodId } = req.params;
+    
+    try {
+        await foodModel.findByIdAndUpdate(foodId, {
+            $inc: { viewCount: 1 }
+        });
+        
+        res.status(200).json({
+            success: true,
+            message: "View count incremented"
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to increment view count"
+        });
+    }
+}
+
+// Get a single food item by ID
+async function getFoodById(req, res) {
+    const { foodId } = req.params;
+    
+    try {
+        const food = await foodModel.findById(foodId).populate('foodPartner', 'name address profilePicture');
+        
+        if (!food) {
+            return res.status(404).json({
+                success: false,
+                message: "Food item not found"
+            });
+        }
+        
+        res.status(200).json({
+            success: true,
+            food
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to get food item"
+        });
+    }
+}
+
+// Get foods by category
+async function getFoodsByCategory(req, res) {
+    const { category } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    
+    try {
+        const foods = await foodModel.find({ category })
+            .populate('foodPartner', 'name address')
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit);
+        
+        const total = await foodModel.countDocuments({ category });
+        
+        res.status(200).json({
+            success: true,
+            foods,
+            pagination: {
+                page,
+                limit,
+                total,
+                pages: Math.ceil(total / limit)
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to get foods by category"
+        });
+    }
+}
+
 
 module.exports = {
     createFood,
     getFoodItems,
     likeFood,
     saveFood,
-    getSaveFood
+    getSaveFood,
+    incrementViewCount,
+    getFoodById,
+    getFoodsByCategory
 }

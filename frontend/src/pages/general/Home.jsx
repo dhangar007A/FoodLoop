@@ -2,36 +2,40 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import '../../styles/reels.css'
 import ReelFeed from '../../components/ReelFeed'
+import Header from '../../components/Header'
 
 const Home = () => {
-    const [ videos, setVideos ] = useState([])
-    // Autoplay behavior is handled inside ReelFeed
+    const [videos, setVideos] = useState([])
+    const [activeTab, setActiveTab] = useState('foryou') // 'foryou' or 'following'
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        axios.get("http://localhost:3000/api/food", { withCredentials: true })
+        setLoading(true)
+        const endpoint = activeTab === 'following' 
+            ? "http://localhost:3000/api/user/following-feed"
+            : "http://localhost:3000/api/food"
+        
+        axios.get(endpoint, { withCredentials: true })
             .then(response => {
-
-                console.log(response.data);
-
-                setVideos(response.data.foodItems)
+                const items = activeTab === 'following' 
+                    ? response.data.videos 
+                    : response.data.foodItems
+                setVideos(items || [])
             })
-            .catch(() => { /* noop: optionally handle error */ })
-    }, [])
-
-    // Using local refs within ReelFeed; keeping map here for dependency parity if needed
+            .catch(() => { 
+                setVideos([])
+            })
+            .finally(() => setLoading(false))
+    }, [activeTab])
 
     async function likeVideo(item) {
-
         const response = await axios.post("http://localhost:3000/api/food/like", { foodId: item._id }, {withCredentials: true})
 
         if(response.data.like){
-            console.log("Video liked");
             setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount + 1 } : v))
         }else{
-            console.log("Video unliked");
             setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount - 1 } : v))
         }
-        
     }
 
     async function saveVideo(item) {
@@ -45,12 +49,42 @@ const Home = () => {
     }
 
     return (
-        <ReelFeed
-            items={videos}
-            onLike={likeVideo}
-            onSave={saveVideo}
-            emptyMessage="No videos available."
-        />
+        <div className="home-container">
+            {/* Header with Login/Signup */}
+            <Header />
+            
+            {/* Feed Tabs */}
+            <div className="feed-tabs">
+                <button 
+                    className={`feed-tab ${activeTab === 'foryou' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('foryou')}
+                >
+                    For You
+                </button>
+                <button 
+                    className={`feed-tab ${activeTab === 'following' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('following')}
+                >
+                    Following
+                </button>
+            </div>
+
+            {loading ? (
+                <div className="loading-state">
+                    <div className="loader"></div>
+                </div>
+            ) : (
+                <ReelFeed
+                    items={videos}
+                    onLike={likeVideo}
+                    onSave={saveVideo}
+                    emptyMessage={activeTab === 'following' 
+                        ? "Follow food partners to see their content here!" 
+                        : "No videos available."
+                    }
+                />
+            )}
+        </div>
     )
 }
 

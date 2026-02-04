@@ -39,6 +39,23 @@ router.get('/save',
     foodController.getSaveFood
 )
 
+/* GET /api/food/:foodId - Get single food item */
+router.get('/:foodId',
+    authMiddleware.authUserMiddleware,
+    foodController.getFoodById
+)
+
+/* POST /api/food/:foodId/view - Increment view count */
+router.post('/:foodId/view',
+    authMiddleware.authUserMiddleware,
+    foodController.incrementViewCount
+)
+
+/* GET /api/food/category/:category - Get foods by category */
+router.get('/category/:category',
+    authMiddleware.authUserMiddleware,
+    foodController.getFoodsByCategory
+)
 
 
 module.exports = router

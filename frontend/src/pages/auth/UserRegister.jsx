@@ -1,35 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/auth-shared.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const UserRegister = () => {
-
     const navigate = useNavigate();
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+        setSuccess('');
+        setLoading(true);
 
         const firstName = e.target.firstName.value;
         const lastName = e.target.lastName.value;  
         const email = e.target.email.value;
         const password = e.target.password.value;
 
+        if (!firstName || !email || !password) {
+            setError('Please fill in all required fields');
+            setLoading(false);
+            return;
+        }
 
-        const response = await axios.post("http://localhost:3000/api/auth/user/register", {
-            fullName: firstName + " " + lastName,
-            email,
-            password
-        },
-        {
-            withCredentials: true
-        })
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters');
+            setLoading(false);
+            return;
+        }
 
-        console.log(response.data);
+        try {
+            const response = await axios.post("http://localhost:3000/api/auth/user/register", {
+                fullName: firstName + " " + lastName,
+                email,
+                password
+            }, { withCredentials: true });
 
-        navigate("/")
+            // Store user data in localStorage
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
+            }
+            if (response.data.user) {
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+            }
 
+            setSuccess('Account created successfully! Redirecting...');
+            setTimeout(() => navigate('/'), 1500);
+        } catch (err) {
+            const message = err.response?.data?.message || err.response?.data?.error || 'Registration failed. Please try again.';
+            setError(message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -42,6 +68,18 @@ const UserRegister = () => {
                 <nav className="auth-alt-action" style={{ marginTop: '-4px' }}>
                     <strong style={{ fontWeight: 600 }}>Switch:</strong> <Link to="/user/register">User</Link> • <Link to="/food-partner/register">Food partner</Link>
                 </nav>
+                {error && (
+                    <div className="auth-error">
+                        <span className="error-icon">⚠️</span>
+                        {error}
+                    </div>
+                )}
+                {success && (
+                    <div className="auth-success">
+                        <span className="success-icon">✅</span>
+                        {success}
+                    </div>
+                )}
                 <form className="auth-form" onSubmit={handleSubmit} noValidate>
                     <div className="two-col">
                         <div className="field-group">
@@ -61,7 +99,9 @@ const UserRegister = () => {
                         <label htmlFor="password">Password</label>
                         <input id="password" name="password" type="password" placeholder="••••••••" autoComplete="new-password" />
                     </div>
-                    <button className="auth-submit" type="submit">Sign Up</button>
+                    <button className="auth-submit" type="submit" disabled={loading}>
+                        {loading ? 'Creating account...' : 'Sign Up'}
+                    </button>
                 </form>
                 <div className="auth-alt-action">
                     Already have an account? <Link to="/user/login">Sign in</Link>
