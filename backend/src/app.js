@@ -30,7 +30,7 @@ const rateLimitMiddleware = (req, res, next) => {
 
 app.use(cors({
     origin: function(origin, callback) {
-        // Allow requests from any localhost port for development
+        // Allow requests from localhost (development) and production frontend
         const allowedOrigins = [
             'http://localhost:5173',
             'http://localhost:5174',
@@ -38,8 +38,11 @@ app.use(cors({
             'http://localhost:5176',
             'http://localhost:5177',
             'http://localhost:5178',
-            'http://localhost:3000'
-        ];
+            'http://localhost:3000',
+            'https://foodloop-1.onrender.com',  // Production frontend
+            process.env.CLIENT_URL  // From environment variable
+        ].filter(Boolean);  // Remove undefined values
+        
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
