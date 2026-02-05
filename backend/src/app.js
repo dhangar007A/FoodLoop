@@ -28,35 +28,38 @@ const rateLimitMiddleware = (req, res, next) => {
     next();
 };
 
+// CORS configuration - allow frontend to access backend
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175',
+    'http://localhost:5176',
+    'http://localhost:5177',
+    'http://localhost:5178',
+    'http://localhost:3000',
+    'https://foodloop-1.onrender.com',
+    process.env.CLIENT_URL
+].filter(Boolean);
+
 app.use(cors({
     origin: function(origin, callback) {
-        // Allow requests from localhost (development) and production frontend
-        const allowedOrigins = [
-            'http://localhost:5173',
-            'http://localhost:5174',
-            'http://localhost:5175',
-            'http://localhost:5176',
-            'http://localhost:5177',
-            'http://localhost:5178',
-            'http://localhost:3000',
-            'https://foodloop-1.onrender.com',  // Production frontend
-            process.env.CLIENT_URL  // From environment variable
-        ].filter(Boolean);  // Remove undefined values
+        // Allow requests with no origin (mobile apps, Postman, etc.)
+        if (!origin) return callback(null, true);
         
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS'));
+            console.log('Blocked origin:', origin);
+            callback(null, false);
         }
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    exposedHeaders: ['Set-Cookie']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    exposedHeaders: ['Set-Cookie'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204
 }));
-
-// Handle preflight requests
-app.options('*', cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(rateLimitMiddleware);
