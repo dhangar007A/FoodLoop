@@ -37,7 +37,8 @@ const UserLogin = () => {
         localStorage.setItem('user', JSON.stringify(response.data.user));
       }
 
-      navigate("/");
+      // Trigger page reload to update auth state
+      window.location.href = '/';
     } catch (err) {
       const message = err.response?.data?.message || err.response?.data?.error || 'Invalid email or password';
       setError(message);

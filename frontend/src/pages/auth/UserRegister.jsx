@@ -50,7 +50,10 @@ const UserRegister = () => {
             }
 
             setSuccess('Account created successfully! Redirecting...');
-            setTimeout(() => navigate('/'), 1500);
+            // Trigger page reload to update auth state
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1500);
         } catch (err) {
             const message = err.response?.data?.message || err.response?.data?.error || 'Registration failed. Please try again.';
             setError(message);

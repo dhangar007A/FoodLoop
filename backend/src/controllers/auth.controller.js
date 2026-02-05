@@ -29,10 +29,17 @@ async function registerUser(req, res) {
         id: user._id,
     }, process.env.JWT_SECRET)
 
-    res.cookie("token", token)
+    // Set cookie with proper cross-origin settings
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    })
 
     res.status(201).json({
         message: "User registered successfully",
+        token: token, // Also send token in response
         user: {
             _id: user._id,
             email: user.email,
@@ -68,10 +75,17 @@ async function loginUser(req, res) {
         id: user._id,
     }, process.env.JWT_SECRET)
 
-    res.cookie("token", token)
+    // Set cookie with proper cross-origin settings
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    })
 
     res.status(200).json({
         message: "User logged in successfully",
+        token: token, // Also send token in response
         user: {
             _id: user._id,
             email: user.email,
