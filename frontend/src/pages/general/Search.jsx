@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../../config/api';
 import '../../styles/search.css'
 import { Link } from 'react-router-dom'
 
@@ -32,7 +33,7 @@ const Search = () => {
 
     async function fetchCategories() {
         try {
-            const response = await axios.get('http://localhost:3000/api/search/categories', {
+            const response = await axios.get(`${API_BASE_URL}/api/search/categories`, {
                 withCredentials: true
             })
             setCategories(response.data.categories || [])
@@ -43,7 +44,7 @@ const Search = () => {
 
     async function fetchTrending() {
         try {
-            const response = await axios.get('http://localhost:3000/api/search/trending', {
+            const response = await axios.get(`${API_BASE_URL}/api/search/trending`, {
                 withCredentials: true
             })
             setTrending(response.data.foods || [])
@@ -61,7 +62,7 @@ const Search = () => {
             if (selectedCategory && activeTab === 'food') params.append('category', selectedCategory)
             params.append('sort', sortBy)
 
-            const response = await axios.get(`http://localhost:3000${endpoint}?${params}`, {
+            const response = await axios.get(`${API_BASE_URL}${endpoint}?${params}`, {
                 withCredentials: true
             })
 

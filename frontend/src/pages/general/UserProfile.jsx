@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../../config/api';
 import { Link } from 'react-router-dom'
 import '../../styles/user-profile.css'
 import ThemeToggle from '../../components/ThemeToggle'
@@ -28,7 +29,7 @@ const UserProfile = () => {
 
     async function fetchProfile() {
         try {
-            const response = await axios.get('http://localhost:3000/api/user/profile', {
+            const response = await axios.get(`${API_BASE_URL}/api/user/profile`, {
                 withCredentials: true
             })
             setUser(response.data.user)
@@ -46,7 +47,7 @@ const UserProfile = () => {
 
     async function fetchLikedVideos() {
         try {
-            const response = await axios.get('http://localhost:3000/api/user/liked', {
+            const response = await axios.get(`${API_BASE_URL}/api/user/liked`, {
                 withCredentials: true
             })
             setLikedVideos(response.data.videos || [])
@@ -57,7 +58,7 @@ const UserProfile = () => {
 
     async function fetchFollowing() {
         try {
-            const response = await axios.get('http://localhost:3000/api/follow/following', {
+            const response = await axios.get(`${API_BASE_URL}/api/follow/following`, {
                 withCredentials: true
             })
             setFollowing(response.data.following || [])
@@ -69,7 +70,7 @@ const UserProfile = () => {
     async function handleUpdateProfile(e) {
         e.preventDefault()
         try {
-            const response = await axios.patch('http://localhost:3000/api/user/profile', formData, {
+            const response = await axios.patch(`${API_BASE_URL}/api/user/profile`, formData, {
                 withCredentials: true
             })
             setUser(response.data.user)
@@ -87,7 +88,7 @@ const UserProfile = () => {
         formDataObj.append('profilePicture', file)
 
         try {
-            const response = await axios.patch('http://localhost:3000/api/user/profile', formDataObj, {
+            const response = await axios.patch(`${API_BASE_URL}/api/user/profile`, formDataObj, {
                 withCredentials: true,
                 headers: { 'Content-Type': 'multipart/form-data' }
             })
@@ -99,7 +100,7 @@ const UserProfile = () => {
 
     async function handleLogout() {
         try {
-            await axios.get('http://localhost:3000/api/auth/user/logout', {
+            await axios.get(`${API_BASE_URL}/api/auth/user/logout`, {
                 withCredentials: true
             })
             window.location.href = '/user/login'

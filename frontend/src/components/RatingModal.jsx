@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../config/api';
 import '../styles/rating.css'
 
 const RatingModal = ({ isOpen, onClose, foodPartnerId, foodPartnerName }) => {
@@ -21,7 +22,7 @@ const RatingModal = ({ isOpen, onClose, foodPartnerId, foodPartnerName }) => {
 
     async function fetchUserRating() {
         try {
-            const response = await axios.get(`http://localhost:3000/api/ratings/user/${foodPartnerId}`, {
+            const response = await axios.get(`${API_BASE_URL}/api/ratings/user/${foodPartnerId}`, {
                 withCredentials: true
             })
             if (response.data.rating) {
@@ -36,7 +37,7 @@ const RatingModal = ({ isOpen, onClose, foodPartnerId, foodPartnerName }) => {
 
     async function fetchAllRatings() {
         try {
-            const response = await axios.get(`http://localhost:3000/api/ratings/food-partner/${foodPartnerId}`, {
+            const response = await axios.get(`${API_BASE_URL}/api/ratings/food-partner/${foodPartnerId}`, {
                 withCredentials: true
             })
             setAllRatings(response.data.ratings || [])
@@ -52,7 +53,7 @@ const RatingModal = ({ isOpen, onClose, foodPartnerId, foodPartnerName }) => {
 
         setLoading(true)
         try {
-            await axios.post('http://localhost:3000/api/ratings', {
+            await axios.post(`${API_BASE_URL}/api/ratings`, {
                 foodPartnerId,
                 rating,
                 review

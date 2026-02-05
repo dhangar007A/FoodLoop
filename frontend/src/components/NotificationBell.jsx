@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import API_BASE_URL from '../config/api';
 import '../styles/notification-bell.css'
 
 const NotificationBell = () => {
@@ -15,7 +16,7 @@ const NotificationBell = () => {
 
     async function fetchUnreadCount() {
         try {
-            const response = await axios.get('http://localhost:3000/api/notifications', {
+            const response = await axios.get(`${API_BASE_URL}/api/notifications`, {
                 withCredentials: true
             })
             const unread = response.data.notifications?.filter(n => !n.isRead).length || 0

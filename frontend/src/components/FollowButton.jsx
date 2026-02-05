@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../config/api';
 import '../styles/follow-button.css'
 
 const FollowButton = ({ foodPartnerId, initialFollowing = false, onFollowChange }) => {
@@ -12,7 +13,7 @@ const FollowButton = ({ foodPartnerId, initialFollowing = false, onFollowChange 
 
     async function checkFollowStatus() {
         try {
-            const response = await axios.get(`http://localhost:3000/api/follow/check/${foodPartnerId}`, {
+            const response = await axios.get(`${API_BASE_URL}/api/follow/check/${foodPartnerId}`, {
                 withCredentials: true
             })
             setFollowing(response.data.following)
@@ -26,7 +27,7 @@ const FollowButton = ({ foodPartnerId, initialFollowing = false, onFollowChange 
         setLoading(true)
 
         try {
-            const response = await axios.post('http://localhost:3000/api/follow/toggle', {
+            const response = await axios.post(`${API_BASE_URL}/api/follow/toggle`, {
                 foodPartnerId
             }, { withCredentials: true })
 

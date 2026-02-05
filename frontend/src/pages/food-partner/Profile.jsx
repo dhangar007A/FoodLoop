@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import '../../styles/profile.css'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
+import API_BASE_URL from '../../config/api';
 import FollowButton from '../../components/FollowButton'
 import RatingModal from '../../components/RatingModal'
 
@@ -14,7 +15,7 @@ const Profile = () => {
     const [followersCount, setFollowersCount] = useState(0)
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/api/food-partner/${id}`, { withCredentials: true })
+        axios.get(`${API_BASE_URL}/api/food-partner/${id}`, { withCredentials: true })
             .then(response => {
                 setProfile(response.data.foodPartner)
                 setVideos(response.data.foodPartner.foodItems || [])
@@ -22,7 +23,7 @@ const Profile = () => {
             })
         
         // Check if user is following this food partner
-        axios.get(`http://localhost:3000/api/follow/check/${id}`, { withCredentials: true })
+        axios.get(`${API_BASE_URL}/api/follow/check/${id}`, { withCredentials: true })
             .then(response => {
                 setIsFollowing(response.data.isFollowing)
             })

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../config/api';
 import '../styles/comments.css'
 
 const CommentsModal = ({ isOpen, onClose, foodId, foodName }) => {
@@ -17,7 +18,7 @@ const CommentsModal = ({ isOpen, onClose, foodId, foodName }) => {
     async function fetchComments() {
         try {
             setLoading(true)
-            const response = await axios.get(`http://localhost:3000/api/comments/food/${foodId}`, {
+            const response = await axios.get(`${API_BASE_URL}/api/comments/food/${foodId}`, {
                 withCredentials: true
             })
             setComments(response.data.comments || [])
@@ -33,7 +34,7 @@ const CommentsModal = ({ isOpen, onClose, foodId, foodName }) => {
         if (!newComment.trim()) return
 
         try {
-            const response = await axios.post('http://localhost:3000/api/comments', {
+            const response = await axios.post(`${API_BASE_URL}/api/comments`, {
                 foodId,
                 text: newComment,
                 parentCommentId: replyTo?._id
@@ -58,7 +59,7 @@ const CommentsModal = ({ isOpen, onClose, foodId, foodName }) => {
 
     async function handleLikeComment(commentId) {
         try {
-            const response = await axios.post('http://localhost:3000/api/comments/like', {
+            const response = await axios.post(`${API_BASE_URL}/api/comments/like`, {
                 commentId
             }, { withCredentials: true })
 
@@ -75,7 +76,7 @@ const CommentsModal = ({ isOpen, onClose, foodId, foodName }) => {
 
     async function handleDeleteComment(commentId) {
         try {
-            await axios.delete(`http://localhost:3000/api/comments/${commentId}`, {
+            await axios.delete(`${API_BASE_URL}/api/comments/${commentId}`, {
                 withCredentials: true
             })
             setComments(prev => prev.filter(c => c._id !== commentId))

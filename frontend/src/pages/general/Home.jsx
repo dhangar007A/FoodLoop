@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+import API_BASE_URL from '../../config/api';
 import '../../styles/reels.css'
 import ReelFeed from '../../components/ReelFeed'
 import Header from '../../components/Header'
@@ -12,8 +13,8 @@ const Home = () => {
     useEffect(() => {
         setLoading(true)
         const endpoint = activeTab === 'following' 
-            ? "http://localhost:3000/api/user/following-feed"
-            : "http://localhost:3000/api/food"
+            ? `${API_BASE_URL}/api/user/following-feed`
+            : `${API_BASE_URL}/api/food`
         
         axios.get(endpoint, { withCredentials: true })
             .then(response => {
@@ -29,7 +30,7 @@ const Home = () => {
     }, [activeTab])
 
     async function likeVideo(item) {
-        const response = await axios.post("http://localhost:3000/api/food/like", { foodId: item._id }, {withCredentials: true})
+        const response = await axios.post(`${API_BASE_URL}/api/food/like`, { foodId: item._id }, {withCredentials: true})
 
         if(response.data.like){
             setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount + 1 } : v))
@@ -39,7 +40,7 @@ const Home = () => {
     }
 
     async function saveVideo(item) {
-        const response = await axios.post("http://localhost:3000/api/food/save", { foodId: item._id }, { withCredentials: true })
+        const response = await axios.post(`${API_BASE_URL}/api/food/save`, { foodId: item._id }, { withCredentials: true })
         
         if(response.data.save){
             setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount + 1 } : v))

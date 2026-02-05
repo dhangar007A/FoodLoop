@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../../config/api';
 import '../../styles/notifications.css'
 
 const Notifications = () => {
@@ -13,7 +14,7 @@ const Notifications = () => {
 
     async function fetchNotifications() {
         try {
-            const response = await axios.get('http://localhost:3000/api/notifications/user', {
+            const response = await axios.get(`${API_BASE_URL}/api/notifications/user`, {
                 withCredentials: true
             })
             setNotifications(response.data.notifications || [])
@@ -27,7 +28,7 @@ const Notifications = () => {
 
     async function markAsRead(notificationId) {
         try {
-            await axios.patch(`http://localhost:3000/api/notifications/${notificationId}/read`, {}, {
+            await axios.patch(`${API_BASE_URL}/api/notifications/${notificationId}/read`, {}, {
                 withCredentials: true
             })
             setNotifications(prev => prev.map(n =>
@@ -41,7 +42,7 @@ const Notifications = () => {
 
     async function markAllAsRead() {
         try {
-            await axios.patch('http://localhost:3000/api/notifications/read-all', {}, {
+            await axios.patch(`${API_BASE_URL}/api/notifications/read-all`, {}, {
                 withCredentials: true
             })
             setNotifications(prev => prev.map(n => ({ ...n, isRead: true })))
@@ -53,7 +54,7 @@ const Notifications = () => {
 
     async function deleteNotification(notificationId) {
         try {
-            await axios.delete(`http://localhost:3000/api/notifications/${notificationId}`, {
+            await axios.delete(`${API_BASE_URL}/api/notifications/${notificationId}`, {
                 withCredentials: true
             })
             setNotifications(prev => prev.filter(n => n._id !== notificationId))
